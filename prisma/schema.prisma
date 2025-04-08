@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  name      String?
+  role      Role      @default(USER)
+  posts     Post[]
+  comments  Comment[]
+  likes     Like[]
+  ratings   Rating[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  title     String
+  content   String    @db.Text
+  published Boolean   @default(false)
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  Int
+  comments  Comment[]
+  likes     Like[]
+  ratings   Rating[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([authorId])
+}
+
+model Comment {
+  id              Int       @id @default(autoincrement())
+  content         String
+  author          User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId        Int
+  post            Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId          Int
+  parentComment   Comment?  @relation("CommentToComment", fields: [parentCommentId], references: [id], onDelete: SetNull)
+  parentCommentId Int?
+  replies         Comment[] @relation("CommentToComment")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([authorId])
+  @@index([postId])
+  @@index([parentCommentId])
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+  @@index([userId])
+  @@index([postId])
+}
+
+model Rating {
+  id        Int      @id @default(autoincrement())
+  value     Int      
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, postId])
+  @@index([userId])
+  @@index([postId])
+}
