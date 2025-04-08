@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "devd": "nodemon --watch src --ext ts --exec node --loader ts-node/esm src/index.ts",
     "dev": "nodemon --watch src --ext ts --exec node --no-deprecation --loader ts-node/esm src/index.ts",
     "compile": "tsc",
     "start": "npm run compile && node ./dist/index.js",

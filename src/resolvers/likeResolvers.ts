@@ -40,10 +40,9 @@ export const likeResolvers = {
       })
 
       if (existingLike) {
-        return existingLike // User already liked the post
+        return existingLike 
       }
 
-      // Create new like
       const like = await context.prisma.like.create({
         data: {
           userId: context.userId,

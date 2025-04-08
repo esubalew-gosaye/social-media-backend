@@ -2,7 +2,6 @@ import type { PrismaClient } from "@prisma/client"
 import { verifyToken } from "./utils/auth"
 import { logger } from "./utils/logger"
 
-// Use a more generic type for the request
 interface RequestWithHeaders {
   headers: {
     authorization?: string
@@ -23,14 +22,13 @@ export interface Context {
 }
 
 export async function createContext({ req, prisma }: ContextParams): Promise<Context> {
-  // Default context
   const context: Context = {
     prisma,
     isAuthenticated: false,
   }
 
-  // Get the token from the request headers
   const authHeader = req.headers.authorization
+
   if (!authHeader) {
     return context
   }

@@ -155,7 +155,7 @@ export const postResolvers = {
       return context.prisma.comment.findMany({
         where: {
           postId: parent.id,
-          parentCommentId: null, // Only top-level comments
+          parentCommentId: null, 
         },
       })
     },

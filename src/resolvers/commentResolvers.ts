@@ -12,7 +12,6 @@ export const commentResolvers = {
     comments: async (_: any, args: any, context: Context) => {
       const { postId, authorId, parentCommentId, skip, take } = args
 
-      // Build filter conditions
       const where: any = {}
 
       if (postId) {
@@ -53,7 +52,6 @@ export const commentResolvers = {
         throw new Error("Post not found")
       }
 
-      // If parent comment is provided, check if it exists
       if (parentCommentId) {
         const parentComment = await context.prisma.comment.findUnique({
           where: { id: parentCommentId },
@@ -63,7 +61,6 @@ export const commentResolvers = {
           throw new Error("Parent comment not found")
         }
 
-        // Ensure parent comment belongs to the same post
         if (parentComment.postId !== postId) {
           throw new Error("Parent comment does not belong to the specified post")
         }
@@ -88,7 +85,6 @@ export const commentResolvers = {
         throw new Error("Not authenticated")
       }
 
-      // Check if comment exists
       const comment = await context.prisma.comment.findUnique({
         where: { id },
       })

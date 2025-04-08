@@ -4,7 +4,6 @@ import { hash } from "bcryptjs"
 const prisma = new PrismaClient()
 
 async function main() {
-  // Create users
   const adminUser = await prisma.user.upsert({
     where: { email: "admin@example.com" },
     update: {},
@@ -38,7 +37,6 @@ async function main() {
     },
   })
 
-  // Create posts
   const post1 = await prisma.post.create({
     data: {
       title: "First Post",
@@ -66,7 +64,6 @@ async function main() {
     },
   })
 
-  // Create comments
   const comment1 = await prisma.comment.create({
     data: {
       content: "Great post!",
@@ -83,7 +80,6 @@ async function main() {
     },
   })
 
-  // Create nested comment (reply)
   const reply1 = await prisma.comment.create({
     data: {
       content: "Thanks for your comment!",
@@ -93,7 +89,6 @@ async function main() {
     },
   })
 
-  // Create likes
   await prisma.like.create({
     data: {
       userId: regularUser1.id,
